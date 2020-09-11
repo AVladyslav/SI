@@ -9,20 +9,48 @@ import skfuzzy.control as ctrl
 
 DESTINATION_POINT = 0.1
 
-# Triangle membership function
+# # Triangle membership function
+#
+# distance = ctrl.Antecedent(np.arange(0, 1.5, 0.1), 'distance')
+# speed = ctrl.Consequent(np.arange(0, 1.5, 0.1), 'speed')
+#
+# distance['close'] = fuzz.trimf(distance.universe, [0, 0, 0.6])
+# distance['medium'] = fuzz.trimf(distance.universe, [0.4, 0.75, 1.1])
+# distance['far'] = fuzz.trimf(distance.universe, [0.9, 1.5, 1.5])
+#
+# distance.view()
+#
+# speed['low'] = fuzz.trimf(speed.universe, [-1000, -500, 0.5])
+# speed['medium'] = fuzz.trimf(speed.universe, [0.2, 0.7, 1.2])
+# speed['high'] = fuzz.trimf(speed.universe, [0.7, 1, 1.3])
+#
+# speed.view()
+#
+# rule1 = ctrl.Rule(distance['close'], speed['low'])
+# rule2 = ctrl.Rule(distance['medium'], speed['medium'])
+# rule3 = ctrl.Rule(distance['far'], speed['high'])
+#
+# control_system = ctrl.ControlSystem([rule1, rule2, rule3])
+# control = ctrl.ControlSystemSimulation(control_system)
+#
+# control.input['distance'] = 1.3  # random value
+# control.compute()
+# print(control.output['speed'])
+
+# Trapezoid membership function
 
 distance = ctrl.Antecedent(np.arange(0, 1.5, 0.1), 'distance')
 speed = ctrl.Consequent(np.arange(0, 1.5, 0.1), 'speed')
 
-distance['close'] = fuzz.trimf(distance.universe, [0, 0, 0.6])
-distance['medium'] = fuzz.trimf(distance.universe, [0.4, 0.75, 1.1])
-distance['far'] = fuzz.trimf(distance.universe, [0.9, 1.5, 1.5])
+distance['close'] = fuzz.trapmf(distance.universe, [0, 0, 0.3, 0.6])
+distance['medium'] = fuzz.trapmf(distance.universe, [0.3, 0.6, 0.9, 1.2])
+distance['far'] = fuzz.trapmf(distance.universe, [0.9, 1.2, 1.5, 2.0])
 
 distance.view()
 
-speed['low'] = fuzz.trimf(speed.universe, [-1000, -500, 0.5])
-speed['medium'] = fuzz.trimf(speed.universe, [0.2, 0.7, 1.2])
-speed['high'] = fuzz.trimf(speed.universe, [0.7, 1, 1.3])
+speed['low'] = fuzz.trapmf(speed.universe, [-2, -1, 0, 0.2])
+speed['medium'] = fuzz.trapmf(speed.universe, [0.1, 0.5, 0.7, 0.9])
+speed['high'] = fuzz.trapmf(speed.universe, [0.7, 0.9, 1, 1])
 
 speed.view()
 
@@ -33,7 +61,7 @@ rule3 = ctrl.Rule(distance['far'], speed['high'])
 control_system = ctrl.ControlSystem([rule1, rule2, rule3])
 control = ctrl.ControlSystemSimulation(control_system)
 
-control.input['distance'] = 1.3  # random value
+control.input['distance'] = 0.1  # random value
 control.compute()
 print(control.output['speed'])
 
