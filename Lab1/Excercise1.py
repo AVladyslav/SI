@@ -50,17 +50,49 @@ import skfuzzy.control as ctrl
 
 # vrep.simxStopSimulation(clientID, vrep.simx_opmode_oneshot)  # stop the simulation in vrep
 
+# distance = ctrl.Antecedent(np.arange(0, 10, 1), 'distance')
+# speed = ctrl.Consequent(np.arange(0, 13, 1), 'speed')
+#
+# distance['close'] = fuzz.trapmf(distance.universe, [0, 0, 1, 3])
+# distance['medium'] = fuzz.trimf(distance.universe, [2, 4, 5])
+# distance['far'] = fuzz.trapmf(distance.universe, [4, 7, 10, 10])
+#
+# distance.view()
+#
+# speed['low'] = fuzz.trimf(speed.universe, [0, 0, 2])
+# speed['medium'] = fuzz.trimf(speed.universe, [0, 4, 8])
+# speed['high'] = fuzz.trapmf(speed.universe, [4, 9, 15, 15])
+#
+# speed.view()
+#
+# rule1 = ctrl.Rule(distance['close'], speed['low'])
+# rule2 = ctrl.Rule(distance['medium'], speed['medium'])
+# rule3 = ctrl.Rule(distance['far'], speed['high'])
+#
+# control_system = ctrl.ControlSystem([rule1, rule2, rule3])
+# control = ctrl.ControlSystemSimulation(control_system)
+#
+# control.input['distance'] = 3  # random value
+# control.compute()
+# print(control.output['speed'])
+
+
+# Model "agresywny"
 
 distance = ctrl.Antecedent(np.arange(0, 10, 1), 'distance')
-speed = ctrl.Consequent(np.arange(0, 10, 1), 'speed')
+speed = ctrl.Consequent(np.arange(0, 13, 1), 'speed')
 
-distance['close'] = fuzz.trapmf(distance.universe, [-1, 0, 1, 2])
-distance['medium'] = fuzz.trimf(distance.universe, [2, 4, 6])
-distance['far'] = fuzz.trimf(distance.universe, [5, 8, 8])
+distance['close'] = fuzz.trapmf(distance.universe, [0, 0, 1, 2])
+distance['medium'] = fuzz.trimf(distance.universe, [2, 3.5, 5])
+distance['far'] = fuzz.trapmf(distance.universe, [5, 6, 10, 10])
 
-speed['low'] = fuzz.trapmf(speed.universe, [-1, 0, 1, 2])
-speed['medium'] = fuzz.trimf(speed.universe, [1, 3, 7])
-speed['high'] = fuzz.trimf(speed.universe, [6, 10, 14])
+distance.view()
+
+speed['low'] = fuzz.trimf(speed.universe, [0, 0, 2])
+speed['medium'] = fuzz.trimf(speed.universe, [0, 4, 8])
+speed['high'] = fuzz.trapmf(speed.universe, [4, 9, 15, 15])
+
+speed.view()
 
 rule1 = ctrl.Rule(distance['close'], speed['low'])
 rule2 = ctrl.Rule(distance['medium'], speed['medium'])

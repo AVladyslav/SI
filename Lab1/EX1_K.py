@@ -55,7 +55,7 @@ import skfuzzy.control as ctrl
 MAX_SPEED = 15
 HALF_MAX_SPEED = 7.5
 
-FAHREST_DISTANCE = 7
+FAREST_DISTANCE = 7
 HALF_DISTANCE = 5
 
 distance = ctrl.Antecedent(np.arange(0, 10, 1), 'distance')
