@@ -36,10 +36,10 @@ while (time.time()-t) < 60:  # 30 seconds of communication
 
     if distance > 5:
         tank.forward(10)
-    elif distance > 3:
-        speed = (distance - 2) / 2 * 10
-        print("New speed = " + str(speed))
+    elif distance > 1:
+        speed = distance * 2
         tank.forward(speed)
+        print("New speed = ", speed)
     else:
         tank.stop()
     # print(distance)
