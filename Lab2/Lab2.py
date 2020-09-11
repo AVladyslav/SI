@@ -12,19 +12,19 @@ DESTINATION_POINT = 0.1
 # Triangle membership function
 
 distance = ctrl.Antecedent(np.arange(0, 1.5, 0.1), 'distance')
-speed = ctrl.Consequent(np.arange(0, 1, 0.1), 'speed')
+speed = ctrl.Consequent(np.arange(0, 1.5, 0.1), 'speed')
 
-distance['close'] = fuzz.trimf(distance.universe, [0, 0, 0.75])
-distance['medium'] = fuzz.trimf(distance.universe, [0, 0.75, 1.5])
-distance['far'] = fuzz.trimf(distance.universe, [0.75, 1.5, 1.5])
+distance['close'] = fuzz.trimf(distance.universe, [0, 0, 0.6])
+distance['medium'] = fuzz.trimf(distance.universe, [0.4, 0.75, 1.1])
+distance['far'] = fuzz.trimf(distance.universe, [0.9, 1.5, 1.5])
 
-# distance.view()
+distance.view()
 
-speed['low'] = fuzz.trimf(speed.universe, [0, 0, 0.3])
-speed['medium'] = fuzz.trimf(speed.universe, [0.2, 0.5, 0.7])
-speed['high'] = fuzz.trimf(speed.universe, [0.6, 1, 1])
+speed['low'] = fuzz.trimf(speed.universe, [-1000, -500, 0.5])
+speed['medium'] = fuzz.trimf(speed.universe, [0.2, 0.7, 1.2])
+speed['high'] = fuzz.trimf(speed.universe, [0.7, 1, 1.3])
 
-# speed.view()
+speed.view()
 
 rule1 = ctrl.Rule(distance['close'], speed['low'])
 rule2 = ctrl.Rule(distance['medium'], speed['medium'])
