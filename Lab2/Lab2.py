@@ -6,10 +6,9 @@ import numpy as np
 import skfuzzy as fuzz
 import skfuzzy.control as ctrl
 
-
 DESTINATION_POINT = 0.1
 
-# # Triangle membership function
+# # Triangular membership function
 #
 # distance = ctrl.Antecedent(np.arange(0, 1.5, 0.1), 'distance')
 # speed = ctrl.Consequent(np.arange(0, 1.5, 0.1), 'speed')
@@ -37,20 +36,50 @@ DESTINATION_POINT = 0.1
 # control.compute()
 # print(control.output['speed'])
 
-# Trapezoid membership function
 
-distance = ctrl.Antecedent(np.arange(0, 1.5, 0.1), 'distance')
-speed = ctrl.Consequent(np.arange(0, 1.5, 0.1), 'speed')
+# # Trapezoidal membership function
+#
+# distance = ctrl.Antecedent(np.arange(0, 1.5, 0.1), 'distance')
+# speed = ctrl.Consequent(np.arange(0, 1.5, 0.1), 'speed')
+#
+# distance['close'] = fuzz.trapmf(distance.universe, [0, 0, 0.3, 0.6])
+# distance['medium'] = fuzz.trapmf(distance.universe, [0.3, 0.6, 0.9, 1.2])
+# distance['far'] = fuzz.trapmf(distance.universe, [0.9, 1.2, 1.5, 2.0])
+#
+# distance.view()
+#
+# speed['low'] = fuzz.trapmf(speed.universe, [-2, -1, 0, 0.2])
+# speed['medium'] = fuzz.trapmf(speed.universe, [0.1, 0.5, 0.7, 0.9])
+# speed['high'] = fuzz.trapmf(speed.universe, [0.7, 0.9, 1, 1])
+#
+# speed.view()
+#
+# rule1 = ctrl.Rule(distance['close'], speed['low'])
+# rule2 = ctrl.Rule(distance['medium'], speed['medium'])
+# rule3 = ctrl.Rule(distance['far'], speed['high'])
+#
+# control_system = ctrl.ControlSystem([rule1, rule2, rule3])
+# control = ctrl.ControlSystemSimulation(control_system)
+#
+# control.input['distance'] = 0.1  # random value
+# control.compute()
+# print(control.output['speed'])
 
-distance['close'] = fuzz.trapmf(distance.universe, [0, 0, 0.3, 0.6])
-distance['medium'] = fuzz.trapmf(distance.universe, [0.3, 0.6, 0.9, 1.2])
-distance['far'] = fuzz.trapmf(distance.universe, [0.9, 1.2, 1.5, 2.0])
+
+# Sinusoidal membership function
+
+distance = ctrl.Antecedent(np.arange(0, 1.5, 0.01), 'distance')
+speed = ctrl.Consequent(np.arange(-0.1, 1.01, 0.01), 'speed')
+
+distance['close'] = fuzz.sigmf(distance.universe, 0.3, -15)
+distance['medium'] = fuzz.gaussmf(distance.universe, 0.7, 0.2)
+distance['far'] = fuzz.sigmf(distance.universe, 1.2, 15)
 
 distance.view()
 
-speed['low'] = fuzz.trapmf(speed.universe, [-2, -1, 0, 0.2])
-speed['medium'] = fuzz.trapmf(speed.universe, [0.1, 0.5, 0.7, 0.9])
-speed['high'] = fuzz.trapmf(speed.universe, [0.7, 0.9, 1, 1])
+speed['low'] = fuzz.sigmf(speed.universe, 0.2, -20)
+speed['medium'] = fuzz.gaussmf(speed.universe, 0.5, 0.15)
+speed['high'] = fuzz.sigmf(speed.universe, 0.8, 20)
 
 speed.view()
 
