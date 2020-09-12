@@ -109,7 +109,7 @@ distance['ZR'] = fuzz.trimf(distance.universe, [-0.6, 0, 0.6])
 distance['PS'] = fuzz.trimf(distance.universe, [0.4, 0.75, 1.1])
 distance['PM'] = fuzz.trimf(distance.universe, [0.9, 1.5, 1.5])
 
-distance.view()
+# distance.view()
 
 speed['NM'] = fuzz.trimf(speed.universe, [-1, -1, -0.6])
 speed['NS'] = fuzz.trimf(speed.universe, [-0.7, -0.5, -0.3])
@@ -117,7 +117,7 @@ speed['ZR'] = fuzz.trimf(speed.universe, [-0.4, 0, 0.4])
 speed['PS'] = fuzz.trimf(speed.universe, [0.3, 0.5, 0.7])
 speed['PM'] = fuzz.trimf(speed.universe, [0.6, 1, 1])
 
-speed.view()
+# speed.view()
 
 rule1 = ctrl.Rule(distance['NM'], speed['NM'])
 rule2 = ctrl.Rule(distance['NS'], speed['NS'])
@@ -171,10 +171,12 @@ err_code, position = vrep.simxGetObjectPosition(clientID, load_handle, -1, vrep.
 t = time.time()
 while True:  # read values for 15 seconds
     err_code, position = vrep.simxGetObjectPosition(clientID, load_handle, -1, vrep.simx_opmode_buffer)
+    result = vrep.simxGetObjectVelocity(clientID, load_handle, vrep.simx_opmode_streaming)
+    obj_velocity = result[1][0]
     if err_code == 0:
         distance = position[0] - DESTINATION_POINT
         control.input['distance'] = distance
         control.compute()
         speed = control.output['speed']
         set_speed(speed)
-        print('Position =', position[0], '\t\tSpeed =', speed)
+        print('Position =', position[0], '\t\tNew speed =', speed, '\t\tObject velocity =', obj_velocity)
