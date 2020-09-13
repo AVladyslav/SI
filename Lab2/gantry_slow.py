@@ -2,78 +2,51 @@ import vrep
 import sys
 import time
 import numpy as np
+import matplotlib.pyplot as plt
 
 import skfuzzy as fuzz
 import skfuzzy.control as ctrl
 
-
 def build_controls():
     global distance, height, speed
-    # position = [1.40:-1.29]
 
-    MAX_SPEED = 2
-    HALF_MAX_SPEED = 1
+    MAX_SPEED = 1
+    HALF_MAX_SPEED = 0.5
 
     FAREST_DISTANCE = 1.4
     HALF_DISTANCE = 0.7
 
-    MAX_HEIGHT = 0.2104741632938385
-    MIN_HEIGHT = -0.22151437401771545
-    IDEAL_HEIGHT = 0.0
+    distance = ctrl.Antecedent(np.arange(-0.5, 2.1, 0.01), 'distance')
 
-    distance = ctrl.Antecedent(np.arange(0, FAREST_DISTANCE, 0.1), 'distance')
-
-    distance['close'] = fuzz.trapmf(distance.universe, [-0.2, 0, 0.2, 0.4])
-    distance['semi-close'] = fuzz.trimf(distance.universe, [0.3, 0.6, 1])
-    distance['far'] = fuzz.trimf(distance.universe, [0.8, 1.4, 1.4])
+    distance['close'] = fuzz.trapmf(distance.universe, [-0.5, -0.5, 0, 0.7])
+    distance['semi-close'] = fuzz.trimf(distance.universe, [0, 0.7, 1.4])
+    distance['far'] = fuzz.trimf(distance.universe, [0.7, 1.4, 2.1])
 
     distance['far'].view()
 
-    speed = ctrl.Consequent(np.arange(0, MAX_SPEED, 0.1), 'speed')
-    # speed.automf(3)
-    # speed['average'].view()
+    speed = ctrl.Consequent(np.arange(-0.5, 1.5, 0.01), 'speed')
 
-    speed['low'] = fuzz.trimf(speed.universe, [-1000, -500, 0.1])
-    speed['medium'] = fuzz.trimf(speed.universe, [0.1, HALF_MAX_SPEED, MAX_SPEED])
-    speed['high'] = fuzz.trimf(speed.universe, [HALF_MAX_SPEED, MAX_SPEED, MAX_SPEED])
+    speed['low'] = fuzz.trimf(speed.universe, [-0.5, 0, 0.5])
+    speed['medium'] = fuzz.trimf(speed.universe, [0, 0.5, 1])
+    speed['high'] = fuzz.trimf(speed.universe, [0.5, 1, 1.5])
 
     speed['high'].view()
-
-    height = ctrl.Antecedent(np.arange(0.0, MAX_HEIGHT, 0.01), 'height')
-
-    height['low'] = fuzz.trapmf(height.universe, [-0.2, 0, 0.02, 0.05])
-    height['medium'] = fuzz.trimf(height.universe, [0.04, 0.1, 0.15])
-    height['high'] = fuzz.trimf(height.universe, [0.12, 0.2, 0.24])
-
-    height['high'].view()
 
 
 def build_rules():
     global acceleration
     rules = []
-    rules.append(ctrl.Rule(distance['far'] & height['low'], speed['high']))
-    rules.append(ctrl.Rule(distance['far'] & height['medium'], speed['high']))
-    rules.append(ctrl.Rule(distance['far'] & height['high'], speed['low']))
 
-    rules.append(ctrl.Rule(distance['semi-close'] & height['low'], speed['medium']))
-    rules.append(ctrl.Rule(distance['semi-close'] & height['medium'], speed['medium']))
-    rules.append(ctrl.Rule(distance['semi-close'] & height['high'], speed['low']))
-
-    rules.append(ctrl.Rule(distance['close'] & height['low'], speed['low']))
-    rules.append(ctrl.Rule(distance['close'] & height['medium'], speed['low']))
-    rules.append(ctrl.Rule(distance['close'] & height['high'], speed['low']))
+    rules.append(ctrl.Rule(distance['far'], speed['high']))
+    rules.append(ctrl.Rule(distance['semi-close'], speed['medium']))
+    rules.append(ctrl.Rule(distance['close'], speed['low']))
 
     rules[2].view()
 
     acceleration_ctrl = ctrl.ControlSystem(rules)
     acceleration = ctrl.ControlSystemSimulation(acceleration_ctrl)
 
-    acceleration.input['distance'] = 1.2
-    acceleration.input['height'] = 0.2
-    acceleration.compute()
-
-    print(acceleration.output['speed'])
-    distance.view(sim=acceleration)
+    plt.show()
 
 
 def connect_to_vrep():
@@ -104,7 +77,7 @@ def run_simulation():
     # get handle to the load
     h_min = 1000
     h_max = -1000
-    err_code, load_handle = vrep.simxGetObjectHandle(clientID, "Load", vrep.simx_opmode_blocking)
+    err_code, load_handle = vrep.simxGetObjectHandle(clientID, "Cuboid", vrep.simx_opmode_blocking)
 
     # get first position of load
     err_code, position = vrep.simxGetObjectPosition(clientID, load_handle, -1, vrep.simx_opmode_streaming)
@@ -115,14 +88,16 @@ def run_simulation():
         err_code, position = vrep.simxGetObjectPosition(clientID, load_handle, -1, vrep.simx_opmode_buffer)
 
         acceleration.input['distance'] = position[0]
-        acceleration.input['height'] = position[1]
+        #acceleration.input['height'] = position[1]
         acceleration.compute()
         speed = acceleration.output['speed']
-
         set_speed(speed)
+
+
         if err_code == 0:
+            print("distance = ", position[0], "speed = ", speed)
             # print(position, end="\t")
-            print("distance = ", position[0], "height = ", position[1], "speed = ", speed)
+
 
         if position[1] > h_max:
             h_max = position[1]
@@ -138,5 +113,3 @@ def run_all():
     build_rules()
     connect_to_vrep()
     run_simulation()
-
-run_all()
