@@ -8,33 +8,33 @@ import skfuzzy.control as ctrl
 
 DESTINATION_POINT = 0.1
 
-# # Triangular membership function
-#
-# distance = ctrl.Antecedent(np.arange(0, 1.5, 0.1), 'distance')
-# speed = ctrl.Consequent(np.arange(0, 1.5, 0.1), 'speed')
-#
-# distance['close'] = fuzz.trimf(distance.universe, [0, 0, 0.6])
-# distance['medium'] = fuzz.trimf(distance.universe, [0.4, 0.75, 1.1])
-# distance['far'] = fuzz.trimf(distance.universe, [0.9, 1.5, 1.5])
-#
+# Triangular membership function
+
+distance = ctrl.Antecedent(np.arange(0, 1.5, 0.1), 'distance')
+speed = ctrl.Consequent(np.arange(0, 1.5, 0.1), 'speed')
+
+distance['close'] = fuzz.trapmf(distance.universe, [-0.5, -0.5, 0, 0.7])
+distance['medium'] = fuzz.trimf(distance.universe, [0, 0.7, 1.4])
+distance['far'] = fuzz.trimf(distance.universe, [0.7, 1.4, 2.1])
+
 # distance.view()
-#
-# speed['low'] = fuzz.trimf(speed.universe, [-1000, -500, 0.5])
-# speed['medium'] = fuzz.trimf(speed.universe, [0.2, 0.7, 1.2])
-# speed['high'] = fuzz.trimf(speed.universe, [0.7, 1, 1.3])
-#
+
+speed['low'] = fuzz.trimf(speed.universe, [-0.5, -0, 0.5])
+speed['medium'] = fuzz.trimf(speed.universe, [0, 0.5, 1])
+speed['high'] = fuzz.trimf(speed.universe, [0.5, 1, 1.5])
+
 # speed.view()
-#
-# rule1 = ctrl.Rule(distance['close'], speed['low'])
-# rule2 = ctrl.Rule(distance['medium'], speed['medium'])
-# rule3 = ctrl.Rule(distance['far'], speed['high'])
-#
-# control_system = ctrl.ControlSystem([rule1, rule2, rule3])
-# control = ctrl.ControlSystemSimulation(control_system)
-#
-# control.input['distance'] = 1.3  # random value
-# control.compute()
-# print(control.output['speed'])
+
+rule1 = ctrl.Rule(distance['close'], speed['low'])
+rule2 = ctrl.Rule(distance['medium'], speed['medium'])
+rule3 = ctrl.Rule(distance['far'], speed['high'])
+
+control_system = ctrl.ControlSystem([rule1, rule2, rule3])
+control = ctrl.ControlSystemSimulation(control_system)
+
+control.input['distance'] = 1.3  # random value
+control.compute()
+print(control.output['speed'])
 
 
 # # Trapezoidal membership function
@@ -95,42 +95,42 @@ DESTINATION_POINT = 0.1
 # print(control.output['speed'])
 
 
-# Triangular membership function
-
-distance = ctrl.Antecedent(np.arange(-1.5, 1.5, 0.01), 'distance')
-speed = ctrl.Consequent(np.arange(-1, 1, 0.01), 'speed')
-current_speed = ctrl.Consequent(np.arange(-1, 1, 0.01), 'current_speed')
-
-# NM, NS, ZR, PS, PM (negative medium, negative small, zero, positive small, positive medium respectively)
-
-distance['NM'] = fuzz.trimf(distance.universe, [-1.5, -1.5, -0.9])
-distance['NS'] = fuzz.trimf(distance.universe, [-1.1, -0.75, -0.4])
-distance['ZR'] = fuzz.trimf(distance.universe, [-0.6, 0, 0.6])
-distance['PS'] = fuzz.trimf(distance.universe, [0.4, 0.75, 1.1])
-distance['PM'] = fuzz.trimf(distance.universe, [0.9, 1.5, 1.5])
-
-# distance.view()
-
-speed['NM'] = fuzz.trimf(speed.universe, [-1, -1, -0.6])
-speed['NS'] = fuzz.trimf(speed.universe, [-0.7, -0.5, -0.3])
-speed['ZR'] = fuzz.trimf(speed.universe, [-0.4, 0, 0.4])
-speed['PS'] = fuzz.trimf(speed.universe, [0.3, 0.5, 0.7])
-speed['PM'] = fuzz.trimf(speed.universe, [0.6, 1, 1])
-
-# speed.view()
-
-rule1 = ctrl.Rule(distance['NM'], speed['NM'])
-rule2 = ctrl.Rule(distance['NS'], speed['NS'])
-rule3 = ctrl.Rule(distance['ZR'], speed['ZR'])
-rule4 = ctrl.Rule(distance['PS'], speed['PS'])
-rule5 = ctrl.Rule(distance['PM'], speed['PM'])
-
-control_system = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5])
-control = ctrl.ControlSystemSimulation(control_system)
-
-control.input['distance'] = 1.3  # random value
-control.compute()
-print(control.output['speed'])
+# # Triangular membership function
+#
+# distance = ctrl.Antecedent(np.arange(-1.5, 1.5, 0.01), 'distance')
+# speed = ctrl.Consequent(np.arange(-1, 1, 0.01), 'speed')
+# current_speed = ctrl.Consequent(np.arange(-1, 1, 0.01), 'current_speed')
+#
+# # NM, NS, ZR, PS, PM (negative medium, negative small, zero, positive small, positive medium respectively)
+#
+# distance['NM'] = fuzz.trimf(distance.universe, [-1.5, -1.5, -0.9])
+# distance['NS'] = fuzz.trimf(distance.universe, [-1.1, -0.75, -0.4])
+# distance['ZR'] = fuzz.trimf(distance.universe, [-0.6, 0, 0.6])
+# distance['PS'] = fuzz.trimf(distance.universe, [0.4, 0.75, 1.1])
+# distance['PM'] = fuzz.trimf(distance.universe, [0.9, 1.5, 1.5])
+#
+# # distance.view()
+#
+# speed['NM'] = fuzz.trimf(speed.universe, [-1, -1, -0.6])
+# speed['NS'] = fuzz.trimf(speed.universe, [-0.7, -0.5, -0.3])
+# speed['ZR'] = fuzz.trimf(speed.universe, [-0.4, 0, 0.4])
+# speed['PS'] = fuzz.trimf(speed.universe, [0.3, 0.5, 0.7])
+# speed['PM'] = fuzz.trimf(speed.universe, [0.6, 1, 1])
+#
+# # speed.view()
+#
+# rule1 = ctrl.Rule(distance['NM'], speed['NM'])
+# rule2 = ctrl.Rule(distance['NS'], speed['NS'])
+# rule3 = ctrl.Rule(distance['ZR'], speed['ZR'])
+# rule4 = ctrl.Rule(distance['PS'], speed['PS'])
+# rule5 = ctrl.Rule(distance['PM'], speed['PM'])
+#
+# control_system = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5])
+# control = ctrl.ControlSystemSimulation(control_system)
+#
+# control.input['distance'] = 1.3  # random value
+# control.compute()
+# print(control.output['speed'])
 
 
 def set_speed(velocity):

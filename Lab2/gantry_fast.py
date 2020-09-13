@@ -112,3 +112,6 @@ def run_all():
     build_rules()
     connect_to_vrep()
     run_simulation()
+
+
+run_all()
