@@ -1,5 +1,6 @@
 from tank import Tank
-import vrep
+# import vrep
+import sim as vrep
 import sys
 import time
 import numpy as np
@@ -140,7 +141,7 @@ def run_simulation():
     tank.leftvelocity = 3  # searching_speed.output['searching_speed']
     tank.setVelocity()
 
-    while (time.time() - t) < 200:
+    while (time.time() - t) < 300:
         ne_dist = np.linalg.norm(vrep.simxReadProximitySensor(clientID, 83, vrep.simx_opmode_buffer)[2])
         se_dist = np.linalg.norm(vrep.simxReadProximitySensor(clientID, 78, vrep.simx_opmode_buffer)[2])
         sw_dist = np.linalg.norm(vrep.simxReadProximitySensor(clientID, 79, vrep.simx_opmode_buffer)[2])

@@ -1,5 +1,6 @@
 from tank import Tank
-import vrep
+# import vrep
+import sim as vrep
 import sys
 import time
 import numpy as np

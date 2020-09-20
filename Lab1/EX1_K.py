@@ -108,7 +108,7 @@ tank = Tank(clientID)
 err_code, ps_handle = vrep.simxGetObjectHandle(clientID, "Proximity_sensor", vrep.simx_opmode_blocking)
 
 t = time.time()
-while (time.time() - t) < 30:  # 10 seconds of communitation
+while (time.time() - t) < 60:  # 10 seconds of communitation
     # read values from proximity sensor
     err_code, detectionState, detectedPoint, detectedObjectHandle, detectedSurfaceNormalVector = \
         vrep.simxReadProximitySensor(clientID, ps_handle, vrep.simx_opmode_blocking)

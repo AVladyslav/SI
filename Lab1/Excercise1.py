@@ -1,4 +1,5 @@
-import vrep 
+# import vrep
+import sim as vrep
 import sys
 import time 
 import numpy as np
@@ -8,14 +9,14 @@ import skfuzzy as fuzz
 import skfuzzy.control as ctrl
 
 
-# vrep.simxFinish(-1)  # closes all opened connections, in case any previous wasn't finished
-# clientID = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)  # start a connection
+vrep.simxFinish(-1)  # closes all opened connections, in case any previous wasn't finished
+clientID = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)  # start a connection
 
-# if clientID != -1:
-#     print("Connected to remote API server")
-# else:
-#     print("Not connected to remote API server")
-#     sys.exit("Could not connect")
+if clientID != -1:
+    print("Connected to remote API server")
+else:
+    print("Not connected to remote API server")
+    sys.exit("Could not connect")
 
 # # create instance of Tank
 # tank = Tank(clientID)
@@ -105,14 +106,14 @@ control.input['distance'] = 3  # random value
 control.compute()
 print(control.output['speed'])
 
-vrep.simxFinish(-1)  # closes all opened connections, in case any previous wasn't finished
-clientID = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)  # start a connection
+# vrep.simxFinish(-1)  # closes all opened connections, in case any previous wasn't finished
+# clientID = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)  # start a connection
 
-if clientID != -1:
-    print("Connected to remote API server")
-else:
-    print("Not connected to remote API server")
-    sys.exit("Could not connect")
+# if clientID != -1:
+#     print("Connected to remote API server")
+# else:
+#     print("Not connected to remote API server")
+#     sys.exit("Could not connect")
 
 # create instance of Tank
 tank = Tank(clientID)
@@ -131,9 +132,8 @@ while True:  # 30 seconds of communication
     control.compute()
     speed = control.output['speed']
     tank.forward(speed)
-    print('Dist = ', distance, '\t\tSpeed = ', speed)
-
-    # print(distance)
+    # print('Dist = ', distance, '\t\tSpeed = ', speed)
+    print(tank.readVelocity())
     # avoid collision
 
 # vrep.simxStopSimulation(clientID, vrep.simx_opmode_oneshot)  # stop the simulation in vrep
