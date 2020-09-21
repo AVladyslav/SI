@@ -1,5 +1,5 @@
-# import vrep
-import sim as vrep
+import vrep
+# import sim as vrep
 import sys
 import time
 import numpy as np
@@ -137,6 +137,7 @@ while (time.time() - t) < 200:  # read values for 200 seconds
     nw_distance = np.linalg.norm(vrep.simxReadProximitySensor(clientID, 82, vrep.simx_opmode_buffer)[2])
 
     if is_preparation:
+
         preparation_velocity.input['se'] = se_distance
         preparation_velocity.input['ne'] = ne_distance
         preparation_velocity.compute()
@@ -146,7 +147,9 @@ while (time.time() - t) < 200:  # read values for 200 seconds
             is_preparation = False
             is_first_s = True
             print('First half S')
+
     elif is_first_s:
+
         first_s_velocity.input['se'] = se_distance
         first_s_velocity.input['en'] = en_distance
         first_s_velocity.compute()
@@ -159,8 +162,9 @@ while (time.time() - t) < 200:  # read values for 200 seconds
             is_first_s = False
             is_backward = True
             print('Backward')
-        # print('l:', round(left_velocity, 2), 'r:', round(right_velocity, 2))
+
     elif is_backward:
+
         backward_velocity.input['sw'] = sw_distance
         backward_velocity.input['ne_2'] = ne_distance
         backward_velocity.compute()
@@ -169,11 +173,15 @@ while (time.time() - t) < 200:  # read values for 200 seconds
         tank.rightvelocity = right_velocity
         tank.leftvelocity = left_velocity
         tank.setVelocity()
+
         if sw_distance < 1.2 and ne_distance > 1:
+
             is_backward = False
             is_second_s = True
             print('Second half S')
+
     elif is_second_s:
+
         second_s_velocity.input['nw'] = nw_distance
         second_s_velocity.compute()
         right_velocity = second_s_velocity.output['right_velocity']
@@ -181,6 +189,3 @@ while (time.time() - t) < 200:  # read values for 200 seconds
         tank.rightvelocity = right_velocity
         tank.leftvelocity = left_velocity
         tank.setVelocity()
-
-    # print('ne:', round(ne_distance, 2), 'se:', round(se_distance, 2), 'en:', round(en_distance, 2),
-    #       'vel:', round(velocity, 2))

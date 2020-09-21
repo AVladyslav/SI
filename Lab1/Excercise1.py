@@ -9,14 +9,14 @@ import skfuzzy as fuzz
 import skfuzzy.control as ctrl
 
 
-vrep.simxFinish(-1)  # closes all opened connections, in case any previous wasn't finished
-clientID = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)  # start a connection
-
-if clientID != -1:
-    print("Connected to remote API server")
-else:
-    print("Not connected to remote API server")
-    sys.exit("Could not connect")
+# vrep.simxFinish(-1)  # closes all opened connections, in case any previous wasn't finished
+# clientID = vrep.simxStart('127.0.0.1', 19999, True, True, 5000, 5)  # start a connection
+#
+# if clientID != -1:
+#     print("Connected to remote API server")
+# else:
+#     print("Not connected to remote API server")
+#     sys.exit("Could not connect")
 
 # # create instance of Tank
 # tank = Tank(clientID)

@@ -1,4 +1,6 @@
-import vrep
+# import vrep
+import sim as vrep
+
 import sys
 import time
 import numpy as np
@@ -8,8 +10,8 @@ import skfuzzy.control as ctrl
 
 DESTINATION_POINT = 0.1
 
-# # Triangular membership function
-#
+# Triangular membership function
+
 # distance = ctrl.Antecedent(np.arange(-0.5, 2.1, 0.01), 'distance')
 # speed = ctrl.Consequent(np.arange(-0.5, 1.5, 0.01), 'speed')
 #
